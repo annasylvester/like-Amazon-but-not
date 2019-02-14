@@ -19,7 +19,7 @@ connection.connect(function (err) {
 let inquirer = require('inquirer');
 
 // VARIABLES
-
+let lowInventory = [];
 
 // START APP
 function startApp() {
@@ -66,7 +66,7 @@ function viewAllItems() {
 		if (err) throw err;
 
 		// Shows all products
-		console.log("---------------- Products Available ----------------");
+		console.log("------------------- Products Available --------------------");
 		for (let i = 0; i < results.length; i++) {
 			let allIds = results[i].id;
 			let allNames = results[i].product_name;
@@ -75,13 +75,11 @@ function viewAllItems() {
 
 			console.log(allIds + ". " + allNames + ", $" + allCosts + ", Units Available: " + allQuantity);
 		}
-		console.log("----------------------------------------------------");
+		console.log("-----------------------------------------------------------");
 		startApp();
 	})
 
 }
-
-let lowInventory = [];
 
 // VIEW LOW INVENTORY FUNCTION
 function viewLowInventory() {
@@ -102,131 +100,94 @@ function viewLowInventory() {
 
 			console.log(lowInvId + ". " + lowInvName + ", $" + lowInvPrice + ", Units Available: " + lowInvStock);
 		}
-		console.log("----------------------------------------------------");
+		console.log("-----------------------------------------------------------");
 		startApp();
 	})
 
 }
 
+// ADD TO INVENTORY FUNCTION
+function addToInventory() {
+	connection.query("SELECT * FROM products", function (err, results) {
+		if (err) throw err;
 
+		// Shows all products
+		console.log("---------------- Products Available ----------------");
+		for (let i = 0; i < results.length; i++) {
+			let allIds = results[i].id;
+			let allNames = results[i].product_name;
+			let allCosts = results[i].price;
+			let allQuantity = results[i].stock_quantity;
 
+			console.log(allIds + ". " + allNames + ", Units Available: " + allQuantity);
+		}
+		console.log("----------------------------------------------------------");
 
+		// User is given a list of what to products to add inventory to
+		inquirer
+			.prompt([{
+				name: "choice",
+				type: "rawlist",
+				choices: function () {
+					let choiceArray = [];
+					for (let i = 0; i < results.length; i++) {
+						choiceArray.push(results[i].product_name);
+					}
+					return choiceArray;
+				},
+				message: "Update the inventory of which item?",
+			}])
 
+			.then(function (answer) {
 
-// // User is given a list of what to buy
-// inquirer
-// 	.prompt([{
-// 		name: "choice",
-// 		type: "rawlist",
-// 		choices: function () {
-// 			let choiceArray = [];
-// 			for (let i = 0; i < results.length; i++) {
-// 				choiceArray.push(results[i].product_name);
-// 			}
-// 			return choiceArray;
-// 		},
-// 		message: "What would you like to purchase?",
-// 	}])
+				// Put the user's chosen item into a variable
+				for (let i = 0; i < results.length; i++) {
+					if (results[i].product_name === answer.choice) {
+						chosenItem = results[i];
+					}
+				}
 
-// 	.then(function (answer) {
+				// Displays chosen item one more time
+				console.log("----------------------------------------------------------");
+				console.log("Item chosen: " + chosenItem.id + ". " + chosenItem.product_name + ", Units available: " + chosenItem.stock_quantity);
+				console.log("----------------------------------------------------------");
 
-// 		// Put the user's chosen item into a variable
-// 		for (let i = 0; i < results.length; i++) {
-// 			if (results[i].product_name === answer.choice) {
-// 				chosenItem = results[i];
-// 			}
-// 		}
+				// User chooses how many they want to buy
+				inquirer
+					.prompt([{
+						name: "howmany",
+						type: "input",
+						message: "How many are you adding to the inventory of this item?"
+					}])
 
-// 		// Displays chosen item one more time
-// 		console.log("----------------------------------------------------------");
-// 		console.log("Item chosen: " + chosenItem.product_name + ", Price per unit: " + chosenItem.price + ", Units available: " + chosenItem.stock_quantity);
-// 		console.log("----------------------------------------------------------");
+					.then(function (answer) {
 
-// 		// User chooses how many they want to buy
-// 		inquirer
-// 			.prompt([{
-// 				name: "howmany",
-// 				type: "input",
-// 				message: "How many would you like to purchase?"
-// 			}])
+						// Puts new quantity into a variable
+						let newInventory = chosenItem.stock_quantity + answer.howmany;
 
-// 			.then(function (answer) {
+						// Updates the database with new quantity
+						connection.query(
+							"UPDATE products SET ? WHERE ?",
+							[{
+									stock_quantity: newInventory
+								},
+								{
+									id: chosenItem.id
+								}
+							],
+							function (error) {
+								if (error) throw err;
 
-// 				// if there is enough product, the chosen quantity is subtracted from the quantity in the database
-// 				if (answer.howmany <= chosenItem.stock_quantity) {
+								console.log("----------------------- Inventory Updated -----------------------------------");
+								console.log(answer.howmany + " " + chosenItem.product_name + " added to inventory");
+								console.log("New inventory total: " + newInventory);
+								console.log("----------------------------------------------------------");
 
-// 					// Puts new quantity into a variable
-// 					let newQuantity = chosenItem.stock_quantity - answer.howmany;
-
-// 					// Updates the database with new quantity
-// 					connection.query(
-// 						"UPDATE products SET ? WHERE ?",
-// 						[{
-// 								stock_quantity: newQuantity
-// 							},
-// 							{
-// 								id: chosenItem.id
-// 							}
-// 						],
-// 						function (error) {
-// 							if (error) throw err;
-
-// 							// Adds item to shopping cart
-
-// 							let times = answer.howmany;
-// 							for (let i = 0; i < times; i++) {
-// 								shoppingCart.push(chosenItem);
-// 							}
-
-// 							console.log("----------------------------------------------------------");
-// 							console.log(answer.howmany + " " + chosenItem.product_name + " added to cart");
-// 							console.log("----------------------------------------------------------");
-
-// 							// Restarts app
-// 							startApp();
-// 						}
-// 					);
-
-// 				} else {
-
-// 					// Error Message
-// 					console.log("-------------------------------------------------");
-// 					console.log("We're sorry. There is not enough stock available.");
-// 					console.log("-------------------------------------------------");
-
-// 					// Restarts app
-// 					startApp();
-// 				}
-// 			});
-// 	});
-// });
-// };
-
-
-// // VIEW CART
-// function viewCart() {
-
-// 	// Display each item placed in cart
-// 	console.log("-------------------- Your Cart --------------------");
-
-// 	for (let i = 0; i < shoppingCart.length; i++) {
-// 		let productNames = shoppingCart[i].product_name;
-// 		let productCost = shoppingCart[i].price;
-
-// 		console.log(productNames + ", " + productCost);
-// 		cartTotals.push(productCost);
-// 	}
-
-// 	// Get total of cart items
-// 	for (let i = 0; i < cartTotals.length; i++) {
-// 		sumCartTotal += cartTotals[i];
-// 	}
-
-// 	// Display cart total
-// 	console.log("Your total: " + sumCartTotal);
-// 	console.log("----------------------------------------------------------");
-
-// 	// Restarts app
-// 	startApp();
-
-// };
+								// Restarts app
+								startApp();
+							}
+						)
+					});
+			});
+	});
+};
