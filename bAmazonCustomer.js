@@ -24,7 +24,6 @@ let shoppingCart = [];
 //// Empty cart totals
 let cartTotals = [];
 let sumCartTotal = 0;
-let repeatTImes = 0;
 
 // START APP
 function startApp() {
@@ -101,7 +100,7 @@ function buyProduct() {
 
 				// Displays chosen item one more time
 				console.log("----------------------------------------------------------");
-				console.log("Item chosen: " + chosenItem.product_name + ", Price per unit: " + chosenItem.price +  ", Units available: " + chosenItem.stock_quantity);
+				console.log("Item chosen: " + chosenItem.product_name + ", Price per unit: " + chosenItem.price + ", Units available: " + chosenItem.stock_quantity);
 				console.log("----------------------------------------------------------");
 
 				// User chooses how many they want to buy
@@ -118,7 +117,7 @@ function buyProduct() {
 						if (answer.howmany <= chosenItem.stock_quantity) {
 
 							// Puts new quantity into a variable
-							let newQuantity = chosenItem.stock_quantity - answer.howmany;
+							let newQuantity = parseInt(chosenItem.stock_quantity) - parseInt(answer.howmany);
 
 							// Updates the database with new quantity
 							connection.query(
@@ -171,17 +170,26 @@ function viewCart() {
 	// Display each item placed in cart
 	console.log("-------------------- Your Cart --------------------");
 
-	for (let i = 0; i < shoppingCart.length; i++) {
-		let productNames = shoppingCart[i].product_name;
-		let productCost = shoppingCart[i].price;
+	if (shoppingCart.length > cartTotals.length) {
+		for (let i = 0; i < shoppingCart.length; i++) {
+			let productNames = shoppingCart[i].product_name;
+			let productCost = shoppingCart[i].price;
 
-		console.log(productNames + ", " + productCost);
-		cartTotals.push(productCost);
-	}
+			console.log(productNames + ", " + productCost);
+			cartTotals.push(productCost);
+		}
+		// Get total of cart items
+		for (let i = 0; i < cartTotals.length; i++) {
+			sumCartTotal += cartTotals[i];
+		}
 
-	// Get total of cart items
-	for (let i = 0; i < cartTotals.length; i++) {
-		sumCartTotal += cartTotals[i];
+	} else {
+		for (let i = 0; i < shoppingCart.length; i++) {
+			let productNames = shoppingCart[i].product_name;
+			let productCost = shoppingCart[i].price;
+
+			console.log(productNames + ", " + productCost);
+		}
 	}
 
 	// Display cart total

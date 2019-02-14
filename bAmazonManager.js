@@ -116,7 +116,6 @@ function addToInventory() {
 		for (let i = 0; i < results.length; i++) {
 			let allIds = results[i].id;
 			let allNames = results[i].product_name;
-			let allCosts = results[i].price;
 			let allQuantity = results[i].stock_quantity;
 
 			console.log(allIds + ". " + allNames + ", Units Available: " + allQuantity);
@@ -163,7 +162,94 @@ function addToInventory() {
 					.then(function (answer) {
 
 						// Puts new quantity into a variable
-						let newInventory = chosenItem.stock_quantity + answer.howmany;
+
+						let newInventory = parseInt(chosenItem.stock_quantity) + parseInt(answer.howmany);
+
+						// Updates the database with new quantity
+						connection.query(
+							"UPDATE products SET ? WHERE ?",
+							[{
+									stock_quantity: newInventory
+								},
+								{
+									id: chosenItem.id
+								}
+							],
+							function (error) {
+								if (error) throw err;
+
+								console.log("----------------------- Inventory Updated -----------------------------------");
+								console.log(answer.howmany + " " + chosenItem.product_name + " added to inventory");
+								console.log("New inventory total: " + newInventory);
+								console.log("----------------------------------------------------------");
+
+								// Restarts app
+								startApp();
+							}
+						)
+					});
+			});
+	});
+};
+
+// ADD NEW PRODUCT FUNCTION
+function addNewProduct() {
+	connection.query("SELECT * FROM products", function (err, results) {
+		if (err) throw err;
+
+		// Shows all products
+		console.log("---------------- Products Available ----------------");
+		for (let i = 0; i < results.length; i++) {
+			let allIds = results[i].id;
+			let allNames = results[i].product_name;
+			let allQuantity = results[i].stock_quantity;
+
+			console.log(allIds + ". " + allNames + ", Units Available: " + allQuantity);
+		}
+		console.log("----------------------------------------------------------");
+
+		// User is given a list of what to products to add inventory to
+		inquirer
+			.prompt([{
+				name: "choice",
+				type: "rawlist",
+				choices: function () {
+					let choiceArray = [];
+					for (let i = 0; i < results.length; i++) {
+						choiceArray.push(results[i].product_name);
+					}
+					return choiceArray;
+				},
+				message: "Update the inventory of which item?",
+			}])
+
+			.then(function (answer) {
+
+				// Put the user's chosen item into a variable
+				for (let i = 0; i < results.length; i++) {
+					if (results[i].product_name === answer.choice) {
+						chosenItem = results[i];
+					}
+				}
+
+				// Displays chosen item one more time
+				console.log("----------------------------------------------------------");
+				console.log("Item chosen: " + chosenItem.id + ". " + chosenItem.product_name + ", Units available: " + chosenItem.stock_quantity);
+				console.log("----------------------------------------------------------");
+
+				// User chooses how many they want to buy
+				inquirer
+					.prompt([{
+						name: "howmany",
+						type: "input",
+						message: "How many are you adding to the inventory of this item?"
+					}])
+
+					.then(function (answer) {
+
+						// Puts new quantity into a variable
+
+						let newInventory = parseInt(chosenItem.stock_quantity) + parseInt(answer.howmany);
 
 						// Updates the database with new quantity
 						connection.query(
