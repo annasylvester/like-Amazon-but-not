@@ -20,7 +20,8 @@ Using MSQL, Node.js and Inquirer
 * Inquirer
 * MySQL
 
-# Demo Time!
+# Demo Time!  
+There are two apps that can be called. One is the customer function and the other being the manager function.
 
 ## Customer App
 To see that this app is working, let's look at our database first. (Keep an eye on the crock pot...)   
