@@ -63,7 +63,7 @@ function buyProduct() {
 		if (err) throw err;
 
 		// Shows all products
-		console.log("---------------- Products Available ----------------");
+		console.log("---------------- Products Available ---------------");
 		for (let i = 0; i < results.length; i++) {
 			let allIds = results[i].id;
 			let allNames = results[i].product_name;
@@ -72,7 +72,7 @@ function buyProduct() {
 
 			console.log(allIds + ". " + allNames + ", $" + allCosts + ", Units Available: " + allQuantity);
 		}
-		console.log("----------------------------------------------------------");
+		console.log("---------------------------------------------------");
 
 		// User is given a list of what to buy
 		inquirer
@@ -99,9 +99,9 @@ function buyProduct() {
 				}
 
 				// Displays chosen item one more time
-				console.log("----------------------------------------------------------");
+				console.log("---------------------------------------------------");
 				console.log("Item chosen: " + chosenItem.product_name + ", Price per unit: " + chosenItem.price + ", Units available: " + chosenItem.stock_quantity);
-				console.log("----------------------------------------------------------");
+				console.log("---------------------------------------------------");
 
 				// User chooses how many they want to buy
 				inquirer
@@ -139,9 +139,9 @@ function buyProduct() {
 										shoppingCart.push(chosenItem);
 									}
 
-									console.log("----------------------------------------------------------");
+									console.log("---------------------------------------------------");
 									console.log(answer.howmany + " " + chosenItem.product_name + " added to cart");
-									console.log("----------------------------------------------------------");
+									console.log("---------------------------------------------------");
 
 									// Restarts app
 									startApp();
@@ -151,9 +151,9 @@ function buyProduct() {
 						} else {
 
 							// Error Message
-							console.log("-------------------------------------------------");
+							console.log("---------------------------------------------------");
 							console.log("We're sorry. There is not enough stock available.");
-							console.log("-------------------------------------------------");
+							console.log("---------------------------------------------------");
 
 							// Restarts app
 							startApp();
@@ -194,7 +194,7 @@ function viewCart() {
 
 	// Display cart total
 	console.log("Your total: " + sumCartTotal);
-	console.log("----------------------------------------------------------");
+	console.log("---------------------------------------------------");
 
 	// Restarts app
 	startApp();
