@@ -25,7 +25,8 @@ Using MSQL, Node.js and Inquirer
 ### Customer App
 To see that this app is working, let's look at our database first. (Keep an eye on the crock pot...)   
 ![Img](images/customer_before.png)
-
+  
+To call the app:
 ```bash
 node bAmazonCustomer.js
 ```  
@@ -51,7 +52,8 @@ And of course, the user can exit the app at any time.
 ### Manager App
 To see that this app is working, let's look at our database first.    
 ![Img](images/manager_before.png)
-
+  
+To call the app:
 ```bash
 node bAmazonCustomer.js
 ```  
@@ -65,15 +67,14 @@ If the user chooses to VIEW LOW INVENTORY, all items with inventory below 5 are 
 ![Gif](gifs/manager_step3.gif)  
 
 If the user chooses to ADD TO INVENTORY, the user can scroll through the avaiable products and choose the one they would like to add inventory to.
-![Gif](gifs/customer_step4.gif)  
-![Gif](gifs/customer_step5.gif)  
-![Gif](gifs/customer_step6.gif)  
-![Gif](gifs/customer_step7.gif)  
-![Gif](gifs/customer_step8.gif)  
+![Gif](gifs/manager_step4.gif)  
+![Gif](gifs/manager_step5.gif)  
+![Gif](gifs/manager_step6.gif)  
+![Gif](gifs/manager_step7.gif)   
 
 Looking back at our database, we can see that the stock quantity for crock pots was decreased! Yay! It works!  
-![Img](images/customer_after.png)  
+![Img](images/manager_after.png)  
 
 And of course, the user can exit the app at any time.  
-![Gif](gifs/customer_step5.gif)  
+![Gif](gifs/manager_step8.gif)  
 
