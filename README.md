@@ -23,29 +23,29 @@ Using MSQL, Node.js and Inquirer
 ## Demo Time!
 
 ### Customer App
-To see that this app is working, let's look at our database first:
+To see that this app is working, let's look at our database first:  
 ![Img](images/customer_before.png)
 
-As soon as the user calls the app, 3 options are shown: BUY, VIEW CART or EXIT.
+As soon as the user calls the app, 3 options are shown: BUY, VIEW CART or EXIT.  
 ```bash
 node bAmazonCustomer.js
-```
-![Gif](gifs/customer_step1.gif)
+```  
+![Gif](gifs/customer_step1.gif)  
 
-If the user chooses to BUY, all available products are shown.
+If the user chooses to BUY, all available products are shown.  
 ![Gif](gifs/customer_step2.gif)
 
-The user can then scroll through and choose the product they wish to buy. When they hit enter, that item is added to their cart.
-![Gif](gifs/customer_step3.gif)
+The user can then scroll through and choose the product they wish to buy. When they hit enter, that item is added to their cart.  
+![Gif](gifs/customer_step3.gif)  
 
-The app automatically sends the user back to the start menu. If the user chooses to VIEW CART, what they just added will be shown with the collective total of their cart displayed.
-![Gif](gifs/customer_step4.gif)
+The app automatically sends the user back to the start menu. If the user chooses to VIEW CART, what they just added will be shown with the collective total of their cart displayed.  
+![Gif](gifs/customer_step4.gif)  
 
-Looking back at our database, we can see that the stock quantity for crock pots was decreased! Yay! It works!
-![Img](images/customer_after.png)
+Looking back at our database, we can see that the stock quantity for crock pots was decreased! Yay! It works!  
+![Img](images/customer_after.png)  
 
-And of course, the user can exit the app at any time.
-![Gif](gifs/customer_step5.gif)
+And of course, the user can exit the app at any time.  
+![Gif](gifs/customer_step5.gif)  
 
 ### Manager App
 
