@@ -30,7 +30,7 @@ To call the app:
 ```bash
 node bAmazonCustomer.js
 ```  
-As soon as the user calls the app, 3 options are shown: BUY, VIEW CART or EXIT.  
+As soon as the user calls the app, 3 options are shown: **BUY**, **VIEW CART** or **EXIT**.  
 
 ![Gif](gifs/customer_step1.gif)  
 
@@ -57,7 +57,7 @@ To call the app:
 ```bash
 node bAmazonCustomer.js
 ```  
-As soon as the user calls the app, 5 options are shown: VIEW PRODUCTS FOR SALE, VIEW LOW INVENTORY, ADD TO INVENTORY, ADD NEW PRODUCT or EXIT.  
+As soon as the user calls the app, 5 options are shown: **VIEW PRODUCTS FOR SALE**, **VIEW LOW INVENTORY**, **ADD TO INVENTORY**, **ADD NEW PRODUCT** or EXIT.  
 ![Gif](gifs/manager_step1.gif)  
 
 If the user chooses to **VIEW PRODUCTS FOR SALE**, all available products are shown.  
