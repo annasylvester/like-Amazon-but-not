@@ -66,16 +66,17 @@ function viewAllItems() {
 		if (err) throw err;
 
 		// Shows all products
-		console.log("------------------- Products Available --------------------");
+		console.log("---------------- Products Available ----------------");
 		for (let i = 0; i < results.length; i++) {
 			let allIds = results[i].id;
 			let allNames = results[i].product_name;
-			let allCosts = results[i].price;
 			let allQuantity = results[i].stock_quantity;
+			let allDepts = results[i].department_name;
+			let allCosts = results[i].price;
 
-			console.log(allIds + ". " + allNames + ", $" + allCosts + ", Units Available: " + allQuantity);
+			console.log(allIds + ". " + allNames + ", Department: " + allDepts + ", Price per unit: " + allCosts + ", Units Available: " + allQuantity);
 		}
-		console.log("-----------------------------------------------------------");
+		console.log("----------------------------------------------------------");
 		startApp();
 	})
 
@@ -91,16 +92,22 @@ function viewLowInventory() {
 				lowInventory.push(results[i]);
 			}
 		}
-		console.log("---------------------- Low Inventory ----------------------");
-		for (let i = 0; i < lowInventory.length; i++) {
-			let lowInvId = lowInventory[i].id;
-			let lowInvName = lowInventory[i].product_name;
-			let lowInvPrice = lowInventory[i].price;
-			let lowInvStock = lowInventory[i].stock_quantity;
 
-			console.log(lowInvId + ". " + lowInvName + ", $" + lowInvPrice + ", Units Available: " + lowInvStock);
+		console.log("---------------------- Low Inventory ----------------------");
+		if (lowInventory && lowInventory.length) {
+			for (let i = 0; i < lowInventory.length; i++) {
+				let lowInvId = lowInventory[i].id;
+				let lowInvName = lowInventory[i].product_name;
+				let lowInvPrice = lowInventory[i].price;
+				let lowInvStock = lowInventory[i].stock_quantity;
+
+				console.log(lowInvId + ". " + lowInvName + ", $" + lowInvPrice + ", Units Available: " + lowInvStock);
+			}
+		} else {
+			console.log("No Low Inventory")
 		}
 		console.log("-----------------------------------------------------------");
+
 		startApp();
 	})
 
@@ -192,6 +199,8 @@ function addToInventory() {
 	});
 };
 
+
+
 // ADD NEW PRODUCT FUNCTION
 function addNewProduct() {
 	connection.query("SELECT * FROM products", function (err, results) {
@@ -203,77 +212,64 @@ function addNewProduct() {
 			let allIds = results[i].id;
 			let allNames = results[i].product_name;
 			let allQuantity = results[i].stock_quantity;
+			let allDepts = results[i].department_name;
+			let allCosts = results[i].price;
 
-			console.log(allIds + ". " + allNames + ", Units Available: " + allQuantity);
+			console.log(allIds + ". " + allNames + ", Department: " + allDepts + ", Price per unit: " + allCosts + ", Units Available: " + allQuantity);
 		}
 		console.log("----------------------------------------------------------");
 
 		// User is given a list of what to products to add inventory to
 		inquirer
 			.prompt([{
-				name: "choice",
-				type: "rawlist",
-				choices: function () {
-					let choiceArray = [];
-					for (let i = 0; i < results.length; i++) {
-						choiceArray.push(results[i].product_name);
-					}
-					return choiceArray;
+					name: "item",
+					type: "input",
+					message: "Product name?"
 				},
-				message: "Update the inventory of which item?",
-			}])
-
-			.then(function (answer) {
-
-				// Put the user's chosen item into a variable
-				for (let i = 0; i < results.length; i++) {
-					if (results[i].product_name === answer.choice) {
-						chosenItem = results[i];
+				{
+					name: "dept",
+					type: "input",
+					message: "Department?"
+				},
+				{
+					name: "price",
+					type: "input",
+					message: "Price per unit?",
+					validate: function (value) {
+						if (isNaN(value) === false) {
+							return true;
+						}
+						return false;
+					}
+				},
+				{
+					name: "quantity",
+					type: "input",
+					message: "Stock quantity?",
+					validate: function (value) {
+						if (isNaN(value) === false) {
+							return true;
+						}
+						return false;
 					}
 				}
-
-				// Displays chosen item one more time
-				console.log("----------------------------------------------------------");
-				console.log("Item chosen: " + chosenItem.id + ". " + chosenItem.product_name + ", Units available: " + chosenItem.stock_quantity);
-				console.log("----------------------------------------------------------");
-
-				// User chooses how many they want to buy
-				inquirer
-					.prompt([{
-						name: "howmany",
-						type: "input",
-						message: "How many are you adding to the inventory of this item?"
-					}])
-
-					.then(function (answer) {
-
-						// Puts new quantity into a variable
-
-						let newInventory = parseInt(chosenItem.stock_quantity) + parseInt(answer.howmany);
-
-						// Updates the database with new quantity
-						connection.query(
-							"UPDATE products SET ? WHERE ?",
-							[{
-									stock_quantity: newInventory
-								},
-								{
-									id: chosenItem.id
-								}
-							],
-							function (error) {
-								if (error) throw err;
-
-								console.log("----------------------- Inventory Updated -----------------------------------");
-								console.log(answer.howmany + " " + chosenItem.product_name + " added to inventory");
-								console.log("New inventory total: " + newInventory);
-								console.log("----------------------------------------------------------");
-
-								// Restarts app
-								startApp();
-							}
-						)
-					});
+			])
+			.then(function (answer) {
+				// when finished prompting, insert a new item into the db with that info
+				connection.query(
+					"INSERT INTO products SET ?", {
+						product_name: answer.item,
+						department_name: answer.dept,
+						price: answer.price || 0,
+						stock_quantity: answer.quantity || 0
+					},
+					function (err) {
+						if (err) throw err;
+						console.log("New product added.");
+						// Restarts app
+						startApp();
+					}
+				);
 			});
-	});
-};
+	})
+}
