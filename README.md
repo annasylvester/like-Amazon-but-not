@@ -20,9 +20,9 @@ Using MSQL, Node.js and Inquirer
 * Inquirer
 * MySQL
 
-## Demo Time!
+# Demo Time!
 
-### Customer App
+## Customer App
 To see that this app is working, let's look at our database first. (Keep an eye on the crock pot...)   
 ![Img](images/customer_before.png)
   
@@ -49,7 +49,7 @@ Looking back at our database, we can see that the stock quantity for crock pots 
 And of course, the user can exit the app at any time.  
 ![Gif](gifs/customer_step5.gif)  
 
-### Manager App
+## Manager App
 To see that this app is working, let's look at our database first.    
 ![Img](images/manager_before.png)
   
@@ -57,7 +57,7 @@ To call the app:
 ```bash
 node bAmazonCustomer.js
 ```  
-As soon as the user calls the app, 5 options are shown: **VIEW PRODUCTS FOR SALE**, **VIEW LOW INVENTORY**, **ADD TO INVENTORY**, **ADD NEW PRODUCT** or EXIT.  
+As soon as the user calls the app, 5 options are shown: **VIEW PRODUCTS FOR SALE**, **VIEW LOW INVENTORY**, **ADD TO INVENTORY**, **ADD NEW PRODUCT** or **EXIT**.  
 ![Gif](gifs/manager_step1.gif)  
 
 If the user chooses to **VIEW PRODUCTS FOR SALE**, all available products are shown.  
